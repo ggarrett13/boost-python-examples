@@ -1,11 +1,18 @@
 cmake_minimum_required(VERSION 2.8.3)
 
-FIND_PACKAGE(PythonInterp)
+# TODO: Allow for choice between python 3.6 and python 2.7 for compilation.
+FIND_PACKAGE(PythonInterp 3.6 REQUIRED)
+
+# TODO: Boost component for python must only contain major. Modify and push
+# suggestion on github.
 
 if (PYTHONINTERP_FOUND)
   if (UNIX AND NOT APPLE)
     if (PYTHON_VERSION_MAJOR EQUAL 3)
-        FIND_PACKAGE(Boost COMPONENTS python${PYTHON_VERSION_SUFFIX})
+        # NOTE: As far as is known, building boost.python3 provides the lib files
+        # in the form of python3 and not python3.6 as is suggested by original
+        # code.
+        FIND_PACKAGE(Boost COMPONENTS python${PYTHON_VERSION_MAJOR})
         FIND_PACKAGE(PythonInterp 3)
         FIND_PACKAGE(PythonLibs 3 REQUIRED)
     else()
@@ -13,7 +20,7 @@ if (PYTHONINTERP_FOUND)
         FIND_PACKAGE(PythonInterp)
         FIND_PACKAGE(PythonLibs REQUIRED)
     endif()
-  else()	
+  else()
     if (PYTHON_VERSION_MAJOR EQUAL 3)
         FIND_PACKAGE(Boost COMPONENTS python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR})
         FIND_PACKAGE(PythonInterp 3)
